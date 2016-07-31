@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>abicheck</title>
+
+<style>
+* { box-sizing: border-box; }
+textarea {
+    width: 100%;
+    background: #E9EFF0;
+    font-family: monospace;
+    font-size: 16px;
+    padding: 5px;
+}
+h1, h2 { color: #114B5F; }
+html { font-family: sans-serif; font-size: 16px; color: #333; }
+footer { text-align: center; }
+a { text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.grid { display: flex; margin-bottom: 20px; }
+.grid-cell { width: 50%; padding: 0 20px; }
+pre { background: #114B5F; color: whitesmoke; padding: 20px; line-height: 1.5em; }
+</style>
+
+  </head>
+  <body>
+
+    <h1>Demo service for abicheck</h1>
+
+    <p>abicheck is a tool to detect backwards incompatible changes for Go projects which would otherwise cause consumers' projects to fail to build. It cannot detect every type of backwards incompatible change, but it should detect all types that cause builds to stop.</p>
+
+    <p>This tool could be added to a CI process to help raise an alert when a backwards incompatible change is merged, futher it could detect and suggest VCS semver tag changes.</p>
+
+    <p>Note this is still early in development it may not catch all cases yet, and there are some known false positives. However, all cases that could break a build should be supportable.</p>
+
+    <p>This was created before Gophercon 2016 to scratch a personal itch, and may or may not be suitable in these vendoring discussions.</p>
+
+    <p>Credits to Elm package manager for the initial idea, but many have also mentioned its potential benefits during the vendoring discussions.</p>
+
+<form method="post">
+    <div class="grid">
+    <div class="grid-cell">
+    <h2>Revision 1</h2>
+    <p>Sample previous release.</p>
+    <textarea name="prev" rows="20">{{ if .Prev }}{{ .Prev }}{{ else }}package example
+
+var Exported int = 42
+var private int = 42
+
+type Inter interface {
+    // Add Member1()
+}
+
+type Str struct {
+    Member1 int
+}
+{{ end }}
+</textarea>
+    </div>
+    <div class="grid-cell">
+    <h2>Revision 2</h2>
+    <p>Sample next release.</p>
+    <textarea name="next" rows="20">{{ if .Next }}{{ .Next }}{{ else }}package example
+
+var Exported uint = 42
+var private uint = 42
+
+type Inter interface {
+    Member1()
+}
+
+type Str struct {
+    // Remove Member1 int
+}
+{{ end }}
+</textarea>
+    </div>
+    </div>
+
+    <div><button>Check for Changes</button></div>
+
+    </form>
+
+    {{ if .Results }}<pre>{{ .Results }}</pre>{{ end }}
+
+
+
+    <footer>
+	<hr>
+	<a href="https://twitter.com/bradleyfalzon">@bradleyfalzon</a> | <a href="https://github.com/bradleyfalzon/abicheck">GitHub</a>
+</footer>
+  </body>
+</html>
