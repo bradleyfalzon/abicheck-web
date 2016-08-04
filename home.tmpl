@@ -46,6 +46,8 @@ pre { background: #114B5F; color: whitesmoke; padding: 20px; line-height: 1.5em;
     <p>Sample previous release.</p>
     <textarea name="prev" rows="20">{{ if .Prev }}{{ .Prev }}{{ else }}package example
 
+import "io"
+
 var Exported int = 42
 var private int = 42
 
@@ -56,6 +58,9 @@ type Inter interface {
 type Str struct {
     Member1 int
 }
+
+func F1(_ io.WriteCloser) {}
+func F2() {}
 {{ end }}
 </textarea>
     </div>
@@ -63,6 +68,8 @@ type Str struct {
     <h2>Revision 2</h2>
     <p>Sample next release.</p>
     <textarea name="next" rows="20">{{ if .Next }}{{ .Next }}{{ else }}package example
+
+import "io"
 
 var Exported uint = 42
 var private uint = 42
@@ -74,6 +81,9 @@ type Inter interface {
 type Str struct {
     // Remove Member1 int
 }
+
+func F1(_ io.Writer) {}
+func F2(_ ...string) {}
 {{ end }}
 </textarea>
     </div>
