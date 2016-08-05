@@ -6,14 +6,20 @@
 
 <style>
 * { box-sizing: border-box; }
+textarea:focus {
+    outline: 0;
+}
 textarea {
     width: 100%;
     background: #E9EFF0;
     font-family: monospace;
     font-size: 16px;
-    padding: 5px;
+    padding: 10px;
+    border: 1px solid #ccc;
 }
 h1, h2 { color: #114B5F; }
+h2 { font-weight: 200; }
+p { line-height: 1.3em; }
 html { font-family: sans-serif; font-size: 16px; color: #333; }
 footer { text-align: center; }
 a { text-decoration: none; }
@@ -21,7 +27,15 @@ a:hover { text-decoration: underline; }
 
 .grid { display: flex; margin-bottom: 20px; }
 .grid-cell { width: 50%; padding: 0 20px; }
-pre { background: #114B5F; color: whitesmoke; padding: 20px; line-height: 1.5em; }
+pre { background: #E9EFF0; padding: 20px; line-height: 1.5em; }
+button {
+    font-weight: bold;
+    font-size: 1em;
+    background-color: #114B5F;
+    color: white;
+    padding: 10px;
+    border: none;
+}
 </style>
 
   </head>
@@ -29,21 +43,16 @@ pre { background: #114B5F; color: whitesmoke; padding: 20px; line-height: 1.5em;
 
     <h1>Demo service for abicheck</h1>
 
-    <p>abicheck is a tool to detect backwards incompatible changes for Go projects which would otherwise cause consumers' projects to fail to build. It cannot detect every type of backwards incompatible change, but it should detect all types that cause builds to stop.</p>
+    <p>abicheck is a tool to detect backwards incompatible changes for Go projects which would otherwise cause consumers' projects to fail to build. See <a href="https://github.com/bradleyfalzon/abicheck">github.com/bradleyfalzon/abicheck</a> for status and gurantees.</p>
 
     <p>This tool could be added to a CI process to help raise an alert when a backwards incompatible change is merged, futher it could detect and suggest VCS semver tag changes.</p>
 
-    <p>Note this is still early in development it may not catch all cases yet, and there are some known false positives. However, all cases that could break a build should be supportable.</p>
-
     <p>This was created before Gophercon 2016 to scratch a personal itch, and may or may not be suitable in these vendoring discussions.</p>
-
-    <p>Credits to Elm package manager for the initial idea, but many have also mentioned its potential benefits during the vendoring discussions.</p>
 
 <form method="post">
     <div class="grid">
     <div class="grid-cell">
     <h2>Revision 1</h2>
-    <p>Sample previous release.</p>
     <textarea name="prev" rows="20">{{ if .Prev }}{{ .Prev }}{{ else }}package example
 
 import "io"
@@ -66,7 +75,6 @@ func F2() {}
     </div>
     <div class="grid-cell">
     <h2>Revision 2</h2>
-    <p>Sample next release.</p>
     <textarea name="next" rows="20">{{ if .Next }}{{ .Next }}{{ else }}package example
 
 import "io"
@@ -93,9 +101,9 @@ func F2(_ ...string) {}
 
     </form>
 
-    {{ if .Results }}<pre>{{ .Results }}</pre>{{ end }}
-
-
+    {{ if .Results }}
+    <h2>Results</h2>
+    <pre>{{ .Results }}</pre>{{ end }}
 
     <footer>
 	<hr>
