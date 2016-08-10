@@ -48,7 +48,7 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 		vcs.SetFile("rev2", "example.go", []byte(next))
 
 		abi := abicheck.New(abicheck.SetVLog(&buf), abicheck.SetVCS(vcs))
-		changes, err := abi.Check("rev1", "rev2")
+		changes, err := abi.Check("", "rev1", "rev2")
 
 		if err != nil {
 			fmt.Fprint(&buf, err)
